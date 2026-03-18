@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 100vh;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 15px;
+            
+        }
+
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 12px 2px;
+            background-color: #F7F3E7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 5px solid #C4734A;
+            color: #C4734A;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+
+        .title {
+            font-size: 16px;
+            font-weight: normal;
+            color: #C4734A;
+        }
+
+        .search
+        {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            align-content: center;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: #D9D9D9;
+            border-radius: 20px;
+            padding: 8px 16px;
+            width: 302px;
+            height: 33px;
+        }
+        
+        .search-icon {
+            color: #666;
+            font-size: 13px;
+            margin-right: 8px;
+        }
+        
+        .search-input {
+            border: none;
+            background: transparent;
+            font-size: 12px;
+            outline: none;
+            color: #333;
+            padding: 5px 0;
+            flex: 1;
+        }
+        
+        .search-input::placeholder {
+            color: #888;
+            opacity: 0.8;
+        }
+        
+        .status
+        {
+            background-color: #F3DFD2;
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: space-evenly;
+            height: 52px;
+            align-items: center;
+            color: #CA8F71;
+            font-size: 1.2em;
+            
+        }
+
+        .price
+        {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+        }
+
+        .main
+        {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            position: relative;
+        }
+
+        .list {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            width: 357px;
+            margin: auto;
+            padding-top: 30px;
+            background-color: #F7F3E7;
+            flex-wrap: wrap;
+        }
+
+        .item
+        {
+            display: flex;
+            flex-direction: column;
+            width: 167px;
+            height: 246px;
+            font-size: 10px;
+            line-height: 1;
+            position: relative;
+            border-radius: 10px;
+        }
+        
+        .first
+        {
+            background-color: #F3DFD2;
+            color: #C4734A;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        
+        .up
+        {
+            background-color: #E7C6B4;
+            height: 12px;
+            border-radius: 2px;
+            font-size: 9px;
+            padding: 2px;
+            margin-left: 2px;
+            display: inline-flex;
+        }
+
+        .second
+        {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        
+        .expence
+        {
+            font-size: 15px;
+            margin-right: 4px;
+        }
+
+        .down
+        {
+            height: 12px;
+            font-size: 9px;
+            background-color: #E7C6B4;
+            color: #CA8F71;
+            padding: 2px;
+            border-radius: 4px;
+        }
+
+        .plus
+        {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            width: 15px;
+            height: 15px;
+        }
+
+        .trolley
+        {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="主页.html"><img src="image/箭头.png" alt="" style="width: 25px;height: 25px;"></a>
+        <h1 class="title">特产</h1>
+    </div>
+    <div class="search">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="searchInput" placeholder="搜索特产">
+        </div>
+        <p style="font-size: 1.5em;">搜索</p>
+    </div>
+    <div class="main">
+        <div class="status">
+            <p>推荐</p>
+            <p>销量</p>
+            <div class="price">
+                <p>价格</p>
+                <img src="imagehotel/上下箭头.png" alt="" style="width: 12px;height: 12px;">
+            </div>
+            <p>分类</p>
+            <img src="imagehotel/购物车-图标2 (1) 1.png" alt="" style="width: 38px;height: 23px;">
+        </div>
+        <div class="list">
+            <div class="item">
+                <img src="imageshop/Rectangle 21.png" alt="" style="width: 167px;height: 185px;">
+                <div class="first">
+                    <p>天津泥人张彩塑五路财神爷开业礼物泥塑京剧脸谱摆件特产纪念品</p>
+                    <p class="up">
+                        近7天1000+人逛过
+                    </p>
+                    <div class="second">
+                        <div class="expence">
+                            ￥200
+                        </div>
+                        <p class="down">
+                            满2件9折
+                        </p>
+                    </div>
+                </div>
+                <img src="imageshop/加号.png" alt="" class="plus">
+            </div>
+            <div class="item">
+                <img src="imageshop/Rectangle 211.png" alt="" style="width: 167px;height: 185px;">
+                <div class="first">
+                    <p>稻香村糕点礼盒特产中式点心零食送好友送长辈礼品</p>
+                    <p class="up">
+                        入选京津冀特产美食店铺榜
+                    </p>
+                    <div class="second">
+                        <div class="expence">
+                            ￥64.5
+                        </div>
+                        <p class="down">
+                            10000+人付款
+                        </p>
+                    </div>
+                </div>
+                <img src="imageshop/加号.png" alt="" class="plus">
+            </div><div class="item">
+                <img src="imageshop/Rectangle 21 (1).png" alt="" style="width: 167px;height: 185px;">
+                <div class="first">
+                    <p>桂发祥十八街麻花礼盒双拼夹馅麻花天津特产送礼送长辈</p>
+                    <p class="up">
+                        超100+人评价味道正宗，麻花酥脆
+                    </p>
+                    <div class="second">
+                        <div class="expence">
+                            ￥41.66
+                        </div>
+                        <p class="down">
+                            超级爆款
+                        </p>
+                    </div>
+                </div>
+                <img src="imageshop/加号.png" alt="" class="plus">
+            </div><div class="item">
+                <img src="imageshop/Rectangle 21 (2).png" alt="" style="width: 167px;height: 185px;">
+                <div class="first">
+                    <p>北京文创礼物珐琅彩瓷茶具特产旅游纪念品中国风特色剪纸伴手礼</p>
+                    <p class="up">
+                        店铺成交超2.4万同行
+                    </p>
+                    <div class="second">
+                        <div class="expence">
+                            ￥100.99
+                        </div>
+                        <p class="down">
+                            8年老店
+                        </p>
+                    </div>
+                </div>
+                <img src="imageshop/加号.png" alt="" class="plus">
+            </div>
+        </div>
+        <img src="imageshop/Group 137.png" alt="" class="trolley" style="width: 58px;height: 65px;">
+    </div>
+    
+</body>
+</html>

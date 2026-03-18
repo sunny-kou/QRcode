@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特产商城</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 100vh;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 12px 2px;
+            background-color: #F7F3E7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 5px solid #C4734A;
+            color: #C4734A;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+
+        .title {
+            font-size: 16px;
+            font-weight: normal;
+            color: #C4734A;
+        }
+
+        .search {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            align-content: center;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: #D9D9D9;
+            border-radius: 20px;
+            padding: 8px 16px;
+            width: 302px;
+            height: 33px;
+        }
+        
+        .search-icon {
+            color: #666;
+            font-size: 13px;
+            margin-right: 8px;
+        }
+        
+        .search-input {
+            border: none;
+            background: transparent;
+            font-size: 12px;
+            outline: none;
+            color: #333;
+            padding: 5px 0;
+            flex: 1;
+        }
+        
+        .search-input::placeholder {
+            color: #888;
+            opacity: 0.8;
+        }
+        
+        .status {
+            background-color: #F3DFD2;
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: space-evenly;
+            height: 52px;
+            align-items: center;
+            color: #CA8F71;
+            font-size: 1.2em;
+        }
+        
+        .status-item {
+            cursor: pointer;
+            padding: 5px 8px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .status-item.active {
+            background-color: #C4734A;
+            color: white;
+        }
+        
+        .status-item:hover {
+            background-color: #E7C6B4;
+        }
+        
+        .price {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .price-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 12px;
+            height: 12px;
+        }
+        
+        .price-arrow.up {
+            color: #C4734A;
+        }
+        
+        .price-arrow.down {
+            color: #888;
+        }
+        
+        .main {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            position: relative;
+        }
+
+        .list {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            width: 357px;
+            margin: auto;
+            padding-top: 30px;
+            background-color: #F7F3E7;
+            flex-wrap: wrap;
+            min-height: 500px;
+        }
+
+        .item {
+            display: flex;
+            flex-direction: column;
+            width: 167px;
+            height: 246px;
+            font-size: 10px;
+            line-height: 1;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .item:hover {
+            transform: translateY(-3px);
+        }
+        
+        .item-img {
+            width: 167px;
+            height: 185px;
+            object-fit: cover;
+        }
+        
+        .first {
+            background-color: #F3DFD2;
+            color: #C4734A;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        
+        .item-title {
+            font-weight: bold;
+            margin-bottom: 3px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            line-height: 1.2;
+        }
+        
+        .up {
+            background-color: #E7C6B4;
+            height: 12px;
+            border-radius: 2px;
+            font-size: 9px;
+            padding: 2px;
+            margin-left: 2px;
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            margin-bottom: 3px;
+        }
+
+        .second {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-items: flex-start;
+        }
+        
+        .expence {
+            font-size: 15px;
+            font-weight: bold;
+            color: #C4734A;
+        }
+
+        .down {
+            height: 12px;
+            font-size: 9px;
+            background-color: #E7C6B4;
+            color: #CA8F71;
+            padding: 2px 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .plus {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .plus:hover {
+            transform: scale(1.2);
+        }
+        
+        .plus.added {
+            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23C4734A"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>');
+        }
+
+        .trolley {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 58px;
+            height: 65px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .trolley:hover {
+            transform: scale(1.1);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #C4734A;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .sort-options {
+            display: none;
+            position: absolute;
+            top: 52px;
+            left: 0;
+            background-color: white;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 99;
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+        }
+        
+        .sort-options.active {
+            display: block;
+        }
+        
+        .sort-option {
+            padding: 12px 20px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .sort-option:hover {
+            background-color: #F7F3E7;
+        }
+        
+        .sort-option.active {
+            background-color: #F3DFD2;
+            color: #C4734A;
+            font-weight: bold;
+        }
+        
+        .category-filter {
+            display: none;
+            position: absolute;
+            top: 52px;
+            left: 0;
+            background-color: white;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 99;
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+            padding: 10px;
+        }
+        
+        .category-filter.active {
+            display: block;
+        }
+        
+        .category-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #C4734A;
+        }
+        
+        .category-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .category-option {
+            padding: 6px 12px;
+            background-color: #F3DFD2;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .category-option:hover, .category-option.active {
+            background-color: #C4734A;
+            color: white;
+        }
+        
+        .no-results {
+            width: 100%;
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .cart-content {
+            background-color: white;
+            width: 90%;
+            max-width: 350px;
+            max-height: 80%;
+            overflow-y: auto;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-title {
+            font-size: 18px;
+            color: #C4734A;
+        }
+        
+        .close-cart {
+            cursor: pointer;
+            font-size: 24px;
+            color: #888;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .cart-item-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-title {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .cart-item-price {
+            color: #C4734A;
+            font-weight: bold;
+        }
+        
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .cart-item-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #F3DFD2;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            color: #C4734A;
+        }
+        
+        .cart-item-count {
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        .cart-total {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 2px solid #C4734A;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .cart-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+        
+        .search-btn {
+            cursor: pointer;
+            font-size: 1.5em;
+            color: #C4734A;
+            transition: color 0.3s;
+        }
+        
+        .search-btn:hover {
+            color: #9a5c3a;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="主页.html"><img src="image/箭头.png" alt="返回" style="width: 25px;height: 25px;"></a>
+        <h1 class="title">特产</h1>
+    </div>
+    <div class="search">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="searchInput" placeholder="搜索特产">
+        </div>
+        <p class="search-btn" id="searchBtn">搜索</p>
+    </div>
+    <div class="main">
+        <div class="status">
+            <div class="status-item" id="recommendBtn">推荐</div>
+            <div class="status-item" id="salesBtn">销量</div>
+            <div class="status-item" id="priceBtn">
+                <div class="price">价格</div>
+                <div class="price-arrow" id="priceArrow">
+                    <i class="fas fa-caret-up"></i>
+                    <i class="fas fa-caret-down"></i>
+                </div>
+            </div>
+            <div class="status-item" id="categoryBtn">分类</div>
+            <div class="status-item" id="cartBtn">
+                <img src="imageshop/购物车-图标2 (1) 1.png" alt="购物车" style="width: 38px;height: 23px;">
+            </div>
+        </div>
+        
+        <div class="sort-options" id="sortOptions">
+            <div class="sort-option" data-sort="price-asc">价格从低到高</div>
+            <div class="sort-option" data-sort="price-desc">价格从高到低</div>
+            <div class="sort-option" data-sort="sales">按销量排序</div>
+            <div class="sort-option" data-sort="recommend">按推荐排序</div>
+        </div>
+        
+        <div class="category-filter" id="categoryFilter">
+            <div class="category-title">选择特产分类</div>
+            <div class="category-options">
+                <div class="category-option" data-category="all">全部</div>
+                <div class="category-option" data-category="food">食品特产</div>
+                <div class="category-option" data-category="handicraft">手工艺品</div>
+                <div class="category-option" data-category="gift">礼品礼盒</div>
+                <div class="category-option" data-category="tea">茶叶茶具</div>
+            </div>
+        </div>
+        
+        <div class="list" id="productList">
+            <!-- 产品将通过JavaScript动态生成 -->
+        </div>
+        
+        <div class="trolley" id="trolleyBtn">
+            <img src="imageshop/Group 137.png" alt="购物车" style="width: 58px;height: 65px;">
+            <div class="cart-count" id="cartCount">0</div>
+        </div>
+        
+        <div class="cart-modal" id="cartModal">
+            <div class="cart-content">
+                <div class="cart-header">
+                    <h2 class="cart-title">购物车</h2>
+                    <div class="close-cart" id="closeCart">&times;</div>
+                </div>
+                <div id="cartItems">
+                    <!-- 购物车内容将通过JavaScript动态生成 -->
+                </div>
+                <div class="cart-total">
+                    <span>总计:</span>
+                    <span id="cartTotal">￥0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 产品数据
+        const products = [
+            {
+                id: 1,
+                name: "天津泥人张彩塑五路财神爷开业礼物泥塑京剧脸谱摆件特产纪念品",
+                price: 200,
+                originalPrice: 240,
+                sales: 1500,
+                visits: 1000,
+                tag: "近7天1000+人逛过",
+                category: "handicraft",
+                image: "imageshop/Rectangle 21.png",
+                discount: "满2件9折",
+                isRecommended: true
+            },
+            {
+                id: 2,
+                name: "稻香村糕点礼盒特产中式点心零食送好友送长辈礼品",
+                price: 64.5,
+                originalPrice: 80,
+                sales: 3200,
+                visits: 2400,
+                tag: "入选京津冀特产美食店铺榜",
+                category: "food",
+                image: "imageshop/Rectangle 211.png",
+                discount: "10000+人付款",
+                isRecommended: true
+            },
+            {
+                id: 3,
+                name: "桂发祥十八街麻花礼盒双拼夹馅麻花天津特产送礼送长辈",
+                price: 41.66,
+                originalPrice: 50,
+                sales: 5800,
+                visits: 4200,
+                tag: "超100+人评价味道正宗，麻花酥脆",
+                category: "food",
+                image: "imageshop/Rectangle 21 (1).png",
+                discount: "超级爆款",
+                isRecommended: false
+            },
+            {
+                id: 4,
+                name: "北京文创礼物珐琅彩瓷茶具特产旅游纪念品中国风特色剪纸伴手礼",
+                price: 100.99,
+                originalPrice: 120,
+                sales: 800,
+                visits: 1200,
+                tag: "店铺成交超2.4万同行",
+                category: "gift",
+                image: "imageshop/Rectangle 21 (2).png",
+                discount: "8年老店",
+                isRecommended: false
+            },
+            {
+                id: 5,
+                name: "北京茯苓夹饼传统糕点老北京特产小吃零食礼盒装",
+                price: 35.8,
+                originalPrice: 45,
+                sales: 2800,
+                visits: 1900,
+                tag: "北京老字号传统糕点",
+                category: "food",
+                image: "imageshop/Rectangle 21.png",
+                discount: "满100减20",
+                isRecommended: true
+            },
+            {
+                id: 6,
+                name: "景德镇陶瓷茶具套装中式功夫茶具茶壶茶杯套装",
+                price: 189.9,
+                originalPrice: 220,
+                sales: 650,
+                visits: 1100,
+                tag: "景德镇陶瓷大师手作",
+                category: "tea",
+                image: "imageshop/Rectangle 211.png",
+                discount: "限时特惠",
+                isRecommended: false
+            },
+            {
+                id: 7,
+                name: "苏州刺绣真丝围巾丝绸丝巾女夏季薄款",
+                price: 128,
+                originalPrice: 168,
+                sales: 1200,
+                visits: 1800,
+                tag: "苏州丝绸非遗工艺",
+                category: "handicraft",
+                image: "imageshop/Rectangle 21 (1).png",
+                discount: "买一送一",
+                isRecommended: true
+            },
+            {
+                id: 8,
+                name: "云南普洱茶熟茶357g茶饼陈年普洱茶叶",
+                price: 89.9,
+                originalPrice: 120,
+                sales: 2100,
+                visits: 2600,
+                tag: "云南普洱茶特级茶叶",
+                category: "tea",
+                image: "imageshop/Rectangle 21 (2).png",
+                discount: "第二件半价",
+                isRecommended: true
+            }
+        ];
+
+        // 购物车数据
+        let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+        let currentSort = 'recommend'; // 当前排序方式
+        let currentCategory = 'all'; // 当前分类
+        let priceOrder = 'asc'; // 价格排序顺序：asc升序，desc降序
+        let filteredProducts = [...products]; // 当前显示的产品列表
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProducts();
+            updateCartCount();
+            
+            // 搜索功能
+            document.getElementById('searchBtn').addEventListener('click', handleSearch);
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+            
+            // 状态栏按钮事件
+            document.getElementById('recommendBtn').addEventListener('click', function() {
+                setActiveStatus('recommendBtn');
+                hideAllFilters();
+                currentSort = 'recommend';
+                sortProducts();
+            });
+            
+            document.getElementById('salesBtn').addEventListener('click', function() {
+                setActiveStatus('salesBtn');
+                hideAllFilters();
+                currentSort = 'sales';
+                sortProducts();
+            });
+            
+            document.getElementById('priceBtn').addEventListener('click', function() {
+                setActiveStatus('priceBtn');
+                togglePriceSort();
+                document.getElementById('sortOptions').classList.toggle('active');
+                document.getElementById('categoryFilter').classList.remove('active');
+            });
+            
+            document.getElementById('categoryBtn').addEventListener('click', function() {
+                setActiveStatus('categoryBtn');
+                document.getElementById('categoryFilter').classList.toggle('active');
+                document.getElementById('sortOptions').classList.remove('active');
+            });
+            
+            document.getElementById('cartBtn').addEventListener('click', function() {
+                setActiveStatus('cartBtn');
+                hideAllFilters();
+                showCart();
+            });
+            
+            // 排序选项点击事件
+            document.querySelectorAll('.sort-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const sortType = this.getAttribute('data-sort');
+                    
+                    // 更新排序选项的激活状态
+                    document.querySelectorAll('.sort-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // 处理排序
+                    if (sortType.startsWith('price-')) {
+                        currentSort = 'price';
+                        priceOrder = sortType.split('-')[1];
+                        updatePriceArrow();
+                    } else {
+                        currentSort = sortType;
+                    }
+                    
+                    sortProducts();
+                    document.getElementById('sortOptions').classList.remove('active');
+                });
+            });
+            
+            // 分类选项点击事件
+            document.querySelectorAll('.category-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    
+                    // 更新分类选项的激活状态
+                    document.querySelectorAll('.category-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // 过滤产品
+                    currentCategory = category;
+                    filterProductsByCategory();
+                    document.getElementById('categoryFilter').classList.remove('active');
+                });
+            });
+            
+            // 购物车相关事件
+            document.getElementById('trolleyBtn').addEventListener('click', showCart);
+            document.getElementById('closeCart').addEventListener('click', hideCart);
+            document.getElementById('cartModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hideCart();
+                }
+            });
+            
+            // 默认激活"推荐"状态
+            setActiveStatus('recommendBtn');
+        });
+        
+        // 设置激活的状态按钮
+        function setActiveStatus(activeId) {
+            // 移除所有状态按钮的激活类
+            document.querySelectorAll('.status-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 为当前激活的按钮添加激活类
+            document.getElementById(activeId).classList.add('active');
+        }
+        
+        // 隐藏所有筛选器
+        function hideAllFilters() {
+            document.getElementById('sortOptions').classList.remove('active');
+            document.getElementById('categoryFilter').classList.remove('active');
+        }
+        
+        // 切换价格排序顺序
+        function togglePriceSort() {
+            if (currentSort === 'price') {
+                priceOrder = priceOrder === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort = 'price';
+                priceOrder = 'asc';
+            }
+            
+            updatePriceArrow();
+            sortProducts();
+        }
+        
+        // 更新价格箭头显示
+        function updatePriceArrow() {
+            const arrowIcons = document.querySelectorAll('#priceArrow i');
+            
+            if (priceOrder === 'asc') {
+                arrowIcons[0].classList.add('up');
+                arrowIcons[1].classList.remove('down');
+            } else {
+                arrowIcons[0].classList.remove('up');
+                arrowIcons[1].classList.add('down');
+            }
+        }
+        
+        // 排序产品
+        function sortProducts() {
+            let sortedProducts = [...filteredProducts];
+            
+            switch(currentSort) {
+                case 'price':
+                    sortedProducts.sort((a, b) => {
+                        return priceOrder === 'asc' ? a.price - b.price : b.price - a.price;
+                    });
+                    break;
+                    
+                case 'sales':
+                    sortedProducts.sort((a, b) => b.sales - a.sales);
+                    break;
+                    
+                case 'recommend':
+                default:
+                    sortedProducts.sort((a, b) => {
+                        // 先按是否推荐排序，再按销量排序
+                        if (a.isRecommended && !b.isRecommended) return -1;
+                        if (!a.isRecommended && b.isRecommended) return 1;
+                        return b.sales - a.sales;
+                    });
+                    break;
+            }
+            
+            filteredProducts = sortedProducts;
+            renderProducts();
+        }
+        
+        // 按分类过滤产品
+        function filterProductsByCategory() {
+            if (currentCategory === 'all') {
+                filteredProducts = [...products];
+            } else {
+                filteredProducts = products.filter(product => product.category === currentCategory);
+            }
+            
+            sortProducts();
+        }
+        
+        // 处理搜索
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            if (searchTerm === '') {
+                filteredProducts = [...products];
+            } else {
+                filteredProducts = products.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // 如果搜索后没有结果，显示提示
+            if (filteredProducts.length === 0) {
+                document.getElementById('productList').innerHTML = `
+                    <div class="no-results">
+                        没有找到"${searchTerm}"相关的特产
+                    </div>
+                `;
+            } else {
+                sortProducts();
+            }
+        }
+        
+        // 渲染产品列表
+        function renderProducts() {
+            const productList = document.getElementById('productList');
+            
+            if (filteredProducts.length === 0) {
+                productList.innerHTML = `
+                    <div class="no-results">
+                        没有可显示的特产
+                    </div>
+                `;
+                return;
+            }
+            
+            productList.innerHTML = filteredProducts.map(product => {
+                const isInCart = cart.some(item => item.id === product.id);
+                const cartItem = cart.find(item => item.id === product.id);
+                const itemCount = cartItem ? cartItem.quantity : 0;
+                
+                return `
+                    <div class="item" data-id="${product.id}">
+                        <img src="${product.image}" alt="${product.name}" class="item-img">
+                        <div class="first">
+                            <p class="item-title">${product.name}</p>
+                            <p class="up">${product.tag}</p>
+                            <div class="second">
+                                <div class="expence">￥${product.price.toFixed(2)}</div>
+                                <p class="down">${product.discount}</p>
+                            </div>
+                        </div>
+                        <img src="imageshop/加号.png" alt="加入购物车" class="plus ${isInCart ? 'added' : ''}" 
+                             data-id="${product.id}" onclick="addToCart(${product.id})">
+                        ${itemCount > 0 ? `<div style="position: absolute; top: 5px; right: 5px; background: #C4734A; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px;">${itemCount}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // 添加到购物车
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const existingItemIndex = cart.findIndex(item => item.id === productId);
+            
+            if (existingItemIndex >= 0) {
+                // 如果商品已在购物车中，增加数量
+                cart[existingItemIndex].quantity += 1;
+            } else {
+                // 否则添加新商品
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
+            }
+            
+            // 保存到本地存储
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+            
+            // 更新UI
+            updateCartCount();
+            renderProducts();
+            
+            // 显示添加成功提示
+            showToast(`${product.name} 已添加到购物车`);
+        }
+        
+        // 更新购物车中的商品数量
+        function updateCartItem(productId, change) {
+            const itemIndex = cart.findIndex(item => item.id === productId);
+            
+            if (itemIndex >= 0) {
+                cart[itemIndex].quantity += change;
+                
+                // 如果数量为0，从购物车中移除
+                if (cart[itemIndex].quantity <= 0) {
+                    cart.splice(itemIndex, 1);
+                }
+                
+                // 保存到本地存储
+                localStorage.setItem('shoppingCart', JSON.stringify(cart));
+                
+                // 更新UI
+                updateCartCount();
+                renderCart();
+                renderProducts();
+            }
+        }
+        
+        // 从购物车中移除商品
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            
+            // 保存到本地存储
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+            
+            // 更新UI
+            updateCartCount();
+            renderCart();
+            renderProducts();
+        }
+        
+        // 更新购物车数量显示
+        function updateCartCount() {
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalItems;
+        }
+        
+        // 渲染购物车
+        function renderCart() {
+            const cartItems = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="cart-empty">
+                        购物车是空的，快去添加商品吧！
+                    </div>
+                `;
+                document.getElementById('cartTotal').textContent = '￥0.00';
+                return;
+            }
+            
+            let total = 0;
+            
+            cartItems.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                return `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-price">￥${item.price.toFixed(2)}</div>
+                        </div>
+                        <div class="cart-item-controls">
+                            <button class="cart-item-btn" onclick="updateCartItem(${item.id}, -1)">-</button>
+                            <span class="cart-item-count">${item.quantity}</span>
+                            <button class="cart-item-btn" onclick="updateCartItem(${item.id}, 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('cartTotal').textContent = `￥${total.toFixed(2)}`;
+        }
+        
+        // 显示购物车
+        function showCart() {
+            renderCart();
+            document.getElementById('cartModal').style.display = 'flex';
+        }
+        
+        // 隐藏购物车
+        function hideCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+        
+        // 显示提示消息
+        function showToast(message) {
+            // 创建提示元素
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: #C4734A;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 20px;
+                z-index: 10000;
+                font-size: 14px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                animation: fadeInOut 2s ease;
+            `;
+            
+            // 添加到页面
+            document.body.appendChild(toast);
+            
+            // 2秒后移除
+            setTimeout(() => {
+                toast.remove();
+            }, 2000);
+            
+            // 添加CSS动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+                    20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                    80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                    100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // 使函数在全局可访问
+        window.addToCart = addToCart;
+        window.updateCartItem = updateCartItem;
+        window.removeFromCart = removeFromCart;
+    </script>
+</body>
+</html>

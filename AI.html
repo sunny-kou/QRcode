@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>酒店预订</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 100vh;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 12px 2px;
+            background-color: #F7F3E7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 5px solid #C4734A;
+            color: #C4734A;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+
+        .title {
+            font-size: 16px;
+            font-weight: normal;
+            color: #C4734A;
+        }
+
+        .search {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            align-content: center;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: #D9D9D9;
+            border-radius: 20px;
+            padding: 8px 16px;
+            width: 302px;
+            height: 33px;
+        }
+        
+        .search-icon {
+            color: #666;
+            font-size: 13px;
+            margin-right: 8px;
+        }
+        
+        .search-input {
+            border: none;
+            background: transparent;
+            font-size: 12px;
+            outline: none;
+            color: #333;
+            padding: 5px 0;
+            flex: 1;
+        }
+        
+        .search-input::placeholder {
+            color: #888;
+            opacity: 0.8;
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            position: relative;
+        }
+
+        .status {
+            background-color: #F3DFD2;
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: space-evenly;
+            height: 52px;
+            align-items: center;
+            color: #CA8F71;
+            font-size: 1.2em;
+            position: relative;
+            z-index: 10;
+        }
+
+        .price {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            cursor: pointer;
+        }
+
+        /* 排序菜单样式 - 优化后 */
+        .sort-menu {
+            position: absolute;
+            top :52px;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 2 10px rgba(0,0,0,0.1px);
+            z-index: 20;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .sort-option {
+            padding: 12px 20px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .sort-option:hover {
+            background-color: #f9f9f9;
+        }
+
+        .sort-option.active {
+            background-color: #F3DFD2;
+            color: #CA8F71;
+            font-weight: bold;
+        }
+
+        /* 列表区域样式优化 */
+        .list {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 357px;
+            margin: auto;
+            background-color: #F7F3E7;
+            margin-top: 10px;
+        }
+
+        .category {
+            width: 100%;
+            height: 120px;
+            background-color: #F3DFD2;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 8px;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .text {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-left: 5px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+        
+        .big {
+            color: #000000;
+            font-weight: normal;
+            font-size: 20px;
+            line-height: 1.2;
+        }
+        
+        .small {
+            color: #000000;
+            font-size: 14px;
+            line-height: 1.2;
+            margin-right: 70px;
+        }
+
+        .safe-area {
+            height: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        /* 排序按钮样式 */
+        .sort-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="主页.html"><img src="image/箭头.png" alt="" style="width: 25px;height: 25px;"></a>
+        <h1 class="title">酒店</h1>
+    </div>
+    <div class="search">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="searchInput" placeholder="搜索酒店">
+        </div>
+        <p style="font-size: 1.5em;">搜索
+    </div>
+    <div class="main">
+        <div class="status">
+            推荐
+            <div class="price sort-btn">
+                价格
+                <img src="imagehotel/上下箭头.png" alt="" style="width: 12px;height: 12px;">
+            </div>
+            <div class="sort-menu" id="sortMenu">
+                <div class="sort-option" data-sort="price-asc">价格从低到高</div>
+                <div class="sort-option" data-sort="price-desc">价格从高到低</div>
+                <div class="sort-option active" data-sort="rating-desc">评分从高到低</div>
+                <div class="sort-option" data-sort="recommend">按推荐排序</div>
+            </div>
+            位置
+            筛选
+        </div>
+        
+        <div class="list" id="hotelList">
+            <div class="category" data-price="168" data-rating="4.3" data-recommend="1">
+                <img src="imagehotel/IMG_5318 1.png" alt="jiudian" style="width: 100px;height: 100px;">
+                <div class="text">
+                    <div class="big">麗枫酒店</div>
+                    <div class="small">“床品柔软如云朵一夜无梦到天明”</div>
+                </div>
+            </div>
+            <div class="category" data-price="198" data-rating="4.2" data-recommend="2">
+                <img src="imagehotel/IMG_5317 1.png" alt="jiudian" style="width: 100px;height: 100px;">
+                <div class="text">
+                    <div class="big">如家酒店</div>
+                    <div class="small">“隔音极佳繁华中独享一方静谧”</div>
+                </div>
+            </div>
+            <div class="category" data-price="228" data-rating="4.2" data-recommend="3">
+                <img src="imagehotel/IMG_5316 1.png" alt="jiudian" style="width: 100px;height: 100px;">
+                <div class="text">
+                    <div class="big">汉庭酒店</div>
+                    <div class="small">“简约不简单商务出行首选”</div>
+                </div>
+            </div>
+            <div class="category" data-price="328" data-rating="4.7" data-recommend="4">
+                <img src="imagehotel/IMG_5314 1.png" alt="jiudian" style="width: 100px;height: 100px;">
+                <div class="text">
+                    <div class="big">亚朵酒店</div>
+                    <div class="small">“推窗即景，清风拂面</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 排序功能实现
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceBtn = document.querySelector('.price');
+            const sortMenu = document.getElementById('sortMenu');
+            const hotelList = document.getElementById('hotelList');
+            const categories = Array.from(hotelList.querySelectorAll('.category'));
+            const sortOptions = document.querySelectorAll('.sort-option');
+            
+            // 切换排序菜单显示/隐藏
+            priceBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sortMenu.style.display = sortMenu.style.display === 'block' ? 'none' : 'block';
+            });
+            
+            // 点击页面其他区域关闭排序菜单
+            document.addEventListener('click', function() {
+                sortMenu.style.display = 'none';
+            });
+            
+            // 防止点击排序菜单内部时关闭
+            sortMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // 排序选项点击事件
+            sortOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const sortType = this.getAttribute('data-sort');
+                    
+                    // 更新选中状态
+                    sortOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 执行排序
+                    sortHotels(sortType);
+                    
+                    // 关闭菜单
+                    sortMenu.style.display = 'none';
+                });
+            });
+            
+            // 排序函数
+            function sortHotels(type) {
+                let sortedCategories = [...categories];
+                
+                switch(type) {
+                    case 'price-asc':
+                        sortedCategories.sort((a, b) => 
+                            parseInt(a.dataset.price) - parseInt(b.dataset.price)
+                        );
+                        break;
+                    case 'price-desc':
+                        sortedCategories.sort((a, b) => 
+                            parseInt(b.dataset.price) - parseInt(a.dataset.price)
+                        );
+                        break;
+                    case 'rating-desc':
+                        sortedCategories.sort((a, b) => 
+                            parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating)
+                        );
+                        break;
+                    case 'recommend':
+                        sortedCategories.sort((a, b) => 
+                            parseInt(a.dataset.recommend) - parseInt(b.dataset.recommend)
+                        );
+                        break;
+                }
+                
+                // 清空列表并添加排序后的元素
+                hotelList.innerHTML = '';
+                sortedCategories.forEach(category => {
+                    hotelList.appendChild(category);
+                });
+            }
+            
+            // 酒店卡片点击事件
+            categories.forEach(category => {
+                category.addEventListener('click', function() {
+                    alert('跳转到酒店详情页: ' + this.querySelector('.big').textContent);
+                    // 实际应用中这里应该是跳转链接
+                    // window.location.href = `hotel-detail.html?id=${this.dataset.id}`;
+                });
+            });
+            
+            // 搜索功能
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                categories.forEach(category => {
+                    const hotelName = category.querySelector('.big').textContent.toLowerCase();
+                    if (hotelName.includes(searchTerm)) {
+                        category.style.display = 'flex';
+                    } else {
+                        category.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

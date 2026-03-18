@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 100vh;
+            font-size: 13px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 12px 2px;
+            background-color: #F7F3E7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 5px solid #C4734A;
+            color: #C4734A;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+        
+        .title {
+            font-size: 16px;
+            font-weight: normal;
+            color: #C4734A;
+        }
+
+        .ticket-list {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 357px;
+            margin: auto;
+            background-color: #F7F3E7;
+        }
+        
+        .category {
+            width: 100%;
+            height: 120px;
+            background-color: #F3DFD2;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 8px;
+            gap: 8px;
+        }
+        
+        .text {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-left: 5px;
+        }
+
+        a
+        {
+            text-decoration: none;
+        }
+        
+        .big {
+            color: #000000;
+            font-weight: normal;
+            font-size: 20px;
+            line-height: 1.2;
+        }
+        
+        .small {
+            color: #000000;
+            font-size: 14px;
+            line-height: 1.2;
+            margin-right: 70px;
+        }
+        
+        .safe-area {
+            height: 20px;
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="主页.html"><img src="image/箭头.png" alt="" style="width: 25px;height: 25px;"></a>
+        <h1 class="title">美食攻略</h1>
+    </div>
+    <div class="ticket-list">
+        <div class="category">
+            <img src="美食image/1771064171509 1.png" alt="jiudian" style="width: 100px;height: 100px;">
+            <div class="text">
+                <div class="big">铜锅涮肉</div>
+                <div class="small">紫铜锅清汤涮鲜羊肉，麻酱蘸料，围炉而食，鲜嫩暖身，冬日雅聚。</div>
+            </div>
+        </div>
+        <div class="category">
+            <img src="美食image/1771064152381 1.png" alt="jiudian" style="width: 100px;height: 100px;">
+            <div class="text">
+                <div class="big">炸酱面</div>
+                <div class="small">手擀面配五花肉炸酱，七碟八碗菜码，拌匀后酱香浓郁，家常至味。</div>
+            </div>
+        </div>
+        <div class="category">
+            <img src="美食image/1771064127230 2.png" alt="jiudian" style="width: 100px;height: 100px;">
+            <div class="text">
+                <div class="big">驴打滚</div>
+                <div class="small">黄豆面裹豆沙卷，软糯香甜，因撒豆面似驴打滚而得名，宫廷小点。</div>
+            </div>
+        </div>
+        <div class="category">
+            <img src="美食image/1771064107625 1.png" alt="jiudian" style="width: 100px;height: 100px;">
+            <div class="text">
+                <div class="big">冰糖葫芦</div>
+                <div class="small">山楂裹晶莹糖衣，酸甜可口，冬日街头的一抹亮色，串起童年记忆。</div>
+            </div>
+        </div>
+        <div class="category">
+            <img src="美食image/IMG_5307 1.png" alt="jiudian" style="width: 100px;height: 100px;">
+            <div class="text">
+                <div class="big">豆汁</div>
+                <div class="small">老北京传统早点，酸中带馊，配焦圈咸菜，地道京味儿醒神开胃。</div>
+            </div>
+        </div>
+    </div>
+
+   
+    <div class="safe-area"></div>
+</body>
+</html>

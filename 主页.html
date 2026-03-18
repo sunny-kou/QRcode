@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>京津冀平台 - 滑动Banner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            line-height: 1.5;
+            max-width: 390px;
+            margin: 0 auto;
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            font-size: 13px;
+            gap: 10px;
+        }
+        
+        .status-bar {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            background: none;
+            border-radius: 24px;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+        
+        /* 左侧天气信息区域 */
+        .weather-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #F7F3E7;
+            border-radius: 16px;
+            padding: 8px 12px;
+            min-width: 80px;
+            width: 74px;
+            height: 37px;
+            text-align: center;
+        }
+        
+        .location {
+            font-size: 0.7em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #333;
+        }
+        
+        .celsius {
+            font-size: 0.7em;
+            color: #666;
+            margin-top: 2px;
+            font-weight: 500;
+        }
+        
+        /* 天气图标样式 */
+        .weather-icon {
+            width: 15px;
+            height: 14px;
+            display: inline-block;
+        }
+        
+        /* 搜索区域 */
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: #D9D9D9;
+            border-radius: 20px;
+            padding: 8px 16px;
+            width: 222px;
+            height: 26px;
+        }
+        
+        .search-icon {
+            color: #666;
+            font-size: 13px;
+            margin-right: 8px;
+        }
+        
+        .search-input {
+            border: none;
+            background: transparent;
+            font-size: 12px;
+            outline: none;
+            color: #333;
+            padding: 5px 0;
+            flex: 1;
+        }
+        
+        .search-input::placeholder {
+            color: #888;
+            opacity: 0.8;
+        }
+        
+        /* 麦克风图标 */
+        .microphone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .microphone:hover {
+            transform: scale(1.1);
+        }
+        
+        .microphone.listening {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                filter: drop-shadow(0 0 0 rgba(255, 200, 0, 0.7)); 
+            }
+            70% { 
+                filter: drop-shadow(0 0 8px rgba(255, 200, 0, 0.7)); 
+            }
+            100% { 
+                filter: drop-shadow(0 0 0 rgba(255, 200, 0, 0)); 
+            }
+        }
+        
+        /* 语音识别提示 */
+        .voice-status {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            font-size: 16px;
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+        
+        .voice-status.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* 天气提示 */
+        .weather-tip {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 1001;
+            display: none;
+        }
+        
+        .weather-tip.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 滑动Banner区域 */
+        .banner-container {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            margin: 10px 0;
+        }
+        
+        .banner-slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 150px;
+        }
+        
+        .banner-slide {
+            flex: 0 0 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .banner-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* 图片标题 */
+        .slide-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+            padding: 15px 20px 10px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        /* 指示器 */
+        .banner-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            z-index: 2;
+        }
+        
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .indicator.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        
+        /* 导航按钮 */
+        .banner-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .banner-container:hover .banner-nav {
+            opacity: 1;
+        }
+        
+        .banner-nav:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .banner-nav.prev {
+            left: 10px;
+        }
+        
+        .banner-nav.next {
+            right: 10px;
+        }
+        
+        .banner-nav i {
+            color: #333;
+            font-size: 18px;
+        }
+        
+        /* 自动播放控制 */
+        .autoplay-control {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            background: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .autoplay-toggle {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 功能区 */
+        .function {
+            width: 357px;
+            min-height: 533px;
+            background-color: #F7F3E7;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            padding: 20px;
+        }
+        
+        .button {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            gap: 20px;
+        }
+        
+        .type {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .category {
+            width: 100px;
+            height: 51px;
+            background-color: #F3DFD2;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            padding-left: 4px;
+            gap: 4px;
+        }
+        
+        .text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            line-height: 15px;
+            gap: 2px;
+        }
+
+        a
+        {
+            text-decoration: none;
+        }
+        
+        .big {
+            color: #C6957B;
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 1;
+        }
+        
+        .small {
+            color: #CAA794;
+            font-size: 11px;
+            line-height: 1;
+        }
+        
+        /* 推荐区域 */
+        .middletext {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #333;
+            font-weight: bold;
+            font-size: 16px;
+            width: 100%;
+            margin: 20px 0 10px 0;
+        }
+        
+        .picture1 {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+            gap: 15px;
+        }
+        
+        .group {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            width: 48%;
+        }
+        
+        .group img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .group p {
+            color: #333;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            margin: 0;
+        }
+        
+        /* 热点推荐图片 */
+        .hotspot-img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin: 10px 0 20px 0;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 420px) {
+            .status-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                padding: 12px;
+            }
+            
+            .weather-info {
+                flex-direction: row;
+                justify-content: center;
+                gap: 10px;
+                min-width: auto;
+                width: auto;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            .function {
+                width: 100%;
+                min-height: auto;
+                padding: 15px;
+            }
+            
+            .type {
+                justify-content: space-around;
+            }
+            
+            .category {
+                width: 30%;
+                min-height: 60px;
+            }
+            
+            .picture1 {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .group {
+                width: 100%;
+            }
+            
+            .banner-slider {
+                height: 120px;
+            }
+            
+            .banner-nav {
+                opacity: 1;
+                background: rgba(255,255,255,0.9);
+            }
+        }
+        
+        /* 触摸设备优化 */
+        .banner-slider {
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+<body>
+    <!-- 天气提示 -->
+    <div class="weather-tip" id="weatherTip"></div>
+    
+    <div class="status-bar">
+        <div class="weather-info">
+            <div class="location">
+                <span id="cityName">获取中...</span>
+                <img src="image/多云.png" alt="天气" class="weather-icon" id="weatherIcon">
+            </div>
+            <div class="celsius" id="temperature">获取中...</div>
+        </div>
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="searchInput" placeholder="搜索酒店、美食、景点...">
+        </div>
+        <div class="microphone" id="microphoneBtn" title="语音搜索">
+            <img src="image/麦克风.png" alt="micro" style="width: 19px;height: 22px;">
+        </div>
+    </div>
+    
+    <!-- 语音识别状态提示 -->
+    <div class="voice-status" id="voiceStatus">
+        <div style="font-size: 24px; margin-bottom: 10px;">🎤</div>
+        <div id="voiceText">正在聆听...</div>
+    </div>
+    
+    <!-- 滑动Banner区域 -->
+    <div class="banner-container" id="bannerContainer">
+        <div class="autoplay-control" id="autoplayControl">
+            <span class="autoplay-toggle" id="autoplayToggle">
+                <i class="fas fa-pause"></i>
+            </span>
+            <span>自动播放</span>
+        </div>
+        
+        <div class="banner-slider" id="bannerSlider">
+            <!-- 轮播图1 -->
+            <div class="banner-slide">
+                <img src="image/IMG_5268 1.png" alt="">
+            </div>
+            <!-- 轮播图2 -->
+            <div class="banner-slide">
+                <img src="image/IMG_5270 1.png" alt="">
+            </div>
+            <!-- 轮播图3 -->
+            <div class="banner-slide">
+                <img src="image/Group 96.png" alt="">
+                <div class="slide-title">河头老街</div>
+            </div>
+        </div>
+        
+        <!-- 导航按钮 -->
+        <div class="banner-nav prev" id="prevBtn">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="banner-nav next" id="nextBtn">
+            <i class="fas fa-chevron-right"></i>
+        </div>
+        
+        <!-- 指示器 -->
+        <div class="banner-indicators" id="indicators">
+            <!-- JS动态生成 -->
+        </div>
+    </div>
+    
+    <div class="function">
+        <div class="button">
+            <div class="type">
+                <div class="category">
+                    <a href="酒店预订.html">
+                    <img src="image/Vector2.png" alt="jiudian" style="width: 29px;height: 27px;">
+                    </a>
+                    <a href="酒店预订.html">
+                    <div class="text">
+                        <div class="big">酒店预订</div>
+                        <div class="small">驿暖如家</div>
+                    </div>
+                    </a>
+                </div>
+                <div class="category">
+                    <a href="特产商城.html">
+                    <img src="image/Frame.png" alt="techan" style="width: 30px;height: 35px;">
+                    </a>
+                    <a href="特产商城.html">
+                    <div class="text">
+                        <div class="big">特产商城</div>
+                        <div class="small">货聚三地</div>
+                    </div>
+                    </a>
+                </div>
+                <div class="category">
+                    <a href="特色文化.html">
+                    <img src="image/竹子.png" alt="huodong" style="width: 31px;height: 28px;">
+                    </a>
+                    <a href="特色文化.html">
+                    <div class="text">
+                        <div class="big">特色活动</div>
+                        <div class="small">节庆翻天</div>
+                    </div>
+                    </a>
+                </div>
+            </div>
+            <div class="type">
+                <div class="category">
+                    <a href="美食攻略.html">
+                        <img src="image/Vector.png" alt="meishi" style="width: 29px;height: 26px;">
+                    </a>
+                    <div class="text">
+                        <a href="美食攻略.html"><div class="big">美食攻略</div></a>
+                        <a href="美食攻略.html"><div class="small">寻味穿巷</div></a>
+                    </div>
+                </div>
+                <div class="category">
+                    <a href="预约平台.html">
+                        <img src="image/Vector (2).png" alt="menpiao" style="width: 29px;height: 26px; margin-top: 2px;">
+                    </a>
+                    <div class="text">
+                        <a href="预约平台.html"><div class="big">门票预约</div></a>
+                        <a href="预约平台.html"><div class="small">省时省力</div></a>
+                    </div>
+                </div>
+                <div class="category">
+                    <img src="image/Vector (1).png" alt="ditu" style="width: 30px;height: 30px;">
+                    <div class="text">
+                        <div class="big">一图在手</div>
+                        <div class="small">三地穿玩</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="middletext">
+            <img src="image/三角形.png" alt="triangle" style="width: 8px;height: 9px;">
+            为你推荐
+        </div>
+        
+        <div class="picture1">
+            <div class="group">
+                <img src="image/IMG_4749 1.png" alt="北京鼓楼">
+                <p>北京·鼓楼</p>
+            </div>
+            <div class="group">
+                <img src="image/IMG_4750 1.png" alt="崇礼滑雪">
+                <p>张家口·崇礼滑雪</p>
+            </div>
+        </div>
+        
+        <div class="middletext">
+            <img src="image/三角形.png" alt="triangle" style="width: 8px;height: 9px;">
+            热点推荐
+        </div>
+        
+        <img src="image/IMG_4748 1.png" alt="热点推荐" class="hotspot-img">
+    </div>
+
+    <script>
+        // 实时天气功能
+        class RealTimeWeather {
+            constructor() {
+                this.cityNameElement = document.getElementById('cityName');
+                this.weatherIconElement = document.getElementById('weatherIcon');
+                this.temperatureElement = document.getElementById('temperature');
+                this.weatherTipElement = document.getElementById('weatherTip');
+                
+                this.init();
+            }
+            
+            init() {
+                // 获取位置和天气
+                this.getLocationAndWeather();
+                
+                // 每30分钟更新一次天气
+                setInterval(() => this.getLocationAndWeather(), 30 * 60 * 1000);
+                
+                // 每小时检查一次天气变化
+                setInterval(() => this.checkWeatherChange(), 60 * 60 * 1000);
+            }
+            
+            async getLocationAndWeather() {
+                try {
+                    // 尝试获取精确位置
+                    const position = await this.getCurrentPosition();
+                    const { latitude, longitude } = position.coords;
+                    
+                    // 使用百度地图API获取城市名（免费API）
+                    const city = await this.getCityByCoordinates(latitude, longitude);
+                    
+                    // 模拟天气数据（实际项目中应该调用天气API）
+                    const weatherData = this.simulateWeatherData(latitude, longitude);
+                    
+                    this.updateWeatherDisplay(city, weatherData);
+                    this.showWeatherTip(weatherData);
+                    
+                } catch (error) {
+                    console.warn('无法获取精确位置，使用默认值:', error);
+                    
+                    // 如果获取位置失败，使用默认的北京天气
+                    const defaultWeather = this.getDefaultWeather();
+                    this.updateWeatherDisplay('北京', defaultWeather);
+                }
+            }
+            
+            getCurrentPosition() {
+                return new Promise((resolve, reject) => {
+                    if (!navigator.geolocation) {
+                        reject(new Error('浏览器不支持地理位置'));
+                        return;
+                    }
+                    
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        timeout: 10000,
+                        maximumAge: 5 * 60 * 1000 // 5分钟
+                    });
+                });
+            }
+            
+            async getCityByCoordinates(latitude, longitude) {
+                try {
+                    // 使用免费的逆地理编码服务
+                    const response = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10`
+                    );
+                    const data = await response.json();
+                    
+                    if (data && data.address) {
+                        // 优先使用城市名，如果没有则使用其他行政区划
+                        return data.address.city || 
+                               data.address.town || 
+                               data.address.village || 
+                               data.address.county || 
+                               '未知地区';
+                    }
+                } catch (error) {
+                    console.warn('获取城市名失败:', error);
+                }
+                
+                return '北京'; // 默认返回北京
+            }
+            
+            simulateWeatherData(latitude, longitude) {
+                const now = new Date();
+                const hour = now.getHours();
+                const month = now.getMonth() + 1;
+                
+                // 根据月份、时间和位置模拟天气
+                let weatherType, temperature, icon;
+                
+                // 根据月份确定基本温度范围
+                let baseTemp;
+                if (month >= 3 && month <= 5) { // 春季
+                    baseTemp = 15;
+                } else if (month >= 6 && month <= 8) { // 夏季
+                    baseTemp = 28;
+                } else if (month >= 9 && month <= 11) { // 秋季
+                    baseTemp = 20;
+                } else { // 冬季
+                    baseTemp = 0;
+                }
+                
+                // 根据时间调整温度（白天高，晚上低）
+                if (hour >= 6 && hour < 18) { // 白天
+                    temperature = baseTemp + 5;
+                } else { // 晚上
+                    temperature = baseTemp - 5;
+                }
+                
+                // 根据位置微调温度（南方高，北方低）
+                if (latitude < 35) { // 南方
+                    temperature += 3;
+                } else { // 北方
+                    temperature -= 2;
+                }
+                
+                // 随机生成天气类型
+                const weatherTypes = ['晴天', '多云', '阴天', '小雨', '中雨', '大雪', '雾'];
+                const weights = [0.4, 0.3, 0.1, 0.1, 0.05, 0.02, 0.03];
+                
+                let random = Math.random();
+                let cumulative = 0;
+                for (let i = 0; i < weatherTypes.length; i++) {
+                    cumulative += weights[i];
+                    if (random <= cumulative) {
+                        weatherType = weatherTypes[i];
+                        break;
+                    }
+                }
+                
+                // 设置图标
+                icon = this.getWeatherIcon(weatherType, hour);
+                
+                // 添加随机变化
+                temperature += (Math.random() * 6 - 3); // -3到+3度的变化
+                
+                return {
+                    type: weatherType,
+                    temperature: Math.round(temperature),
+                    icon: icon,
+                    humidity: Math.round(40 + Math.random() * 40), // 40-80%湿度
+                    wind: Math.round(Math.random() * 5) // 0-5级风
+                };
+            }
+            
+            getWeatherIcon(weatherType, hour) {
+                const isNight = hour < 6 || hour >= 18;
+                
+                switch(weatherType) {
+                    case '晴天':
+                        return isNight ? 'image/夜晚晴天.png' : 'image/晴天.png';
+                    case '多云':
+                        return 'image/多云.png';
+                    case '阴天':
+                        return 'image/阴天.png';
+                    case '小雨':
+                    case '中雨':
+                        return 'image/小雨.png';
+                    case '大雪':
+                        return 'image/大雪.png';
+                    case '雾':
+                        return 'image/雾.png';
+                    default:
+                        return 'image/多云.png';
+                }
+            }
+            
+            getDefaultWeather() {
+                const now = new Date();
+                const month = now.getMonth() + 1;
+                const hour = now.getHours();
+                
+                // 北京默认天气
+                let baseTemp;
+                if (month >= 3 && month <= 5) {
+                    baseTemp = 15;
+                } else if (month >= 6 && month <= 8) {
+                    baseTemp = 28;
+                } else if (month >= 9 && month <= 11) {
+                    baseTemp = 20;
+                } else {
+                    baseTemp = 0;
+                }
+                
+                const temperature = hour >= 6 && hour < 18 ? baseTemp + 5 : baseTemp - 5;
+                
+                return {
+                    type: '多云',
+                    temperature: Math.round(temperature),
+                    icon: 'image/多云.png',
+                    humidity: 60,
+                    wind: 2
+                };
+            }
+            
+            updateWeatherDisplay(city, weather) {
+                this.cityNameElement.textContent = city;
+                this.weatherIconElement.src = weather.icon;
+                this.weatherIconElement.alt = weather.type;
+                this.temperatureElement.textContent = `${weather.temperature}℃`;
+                
+                // 添加温度变化效果
+                this.temperatureElement.style.transition = 'color 0.5s ease';
+                if (weather.temperature > 25) {
+                    this.temperatureElement.style.color = '#e74c3c'; // 热，红色
+                } else if (weather.temperature < 5) {
+                    this.temperatureElement.style.color = '#3498db'; // 冷，蓝色
+                } else {
+                    this.temperatureElement.style.color = '#666'; // 适中，灰色
+                }
+            }
+            
+            showWeatherTip(weather) {
+                let tip = '';
+                
+                // 根据天气类型提供提示
+                switch(weather.type) {
+                    case '晴天':
+                        tip = '🌞 今天天气晴朗，适合户外活动';
+                        break;
+                    case '多云':
+                        tip = '☁️ 今天多云，出门不用打伞';
+                        break;
+                    case '小雨':
+                    case '中雨':
+                        tip = '🌧️ 今天有雨，记得带伞哦';
+                        break;
+                    case '大雪':
+                        tip = '❄️ 今天下雪，注意保暖和出行安全';
+                        break;
+                    case '雾':
+                        tip = '🌫️ 今天有雾，出行请注意安全';
+                        break;
+                    default:
+                        tip = '📋 天气信息已更新';
+                }
+                
+                // 温度提示
+                if (weather.temperature > 30) {
+                    tip += '，注意防暑降温';
+                } else if (weather.temperature < 0) {
+                    tip += '，注意防寒保暖';
+                }
+                
+                this.weatherTipElement.textContent = tip;
+                this.weatherTipElement.classList.add('show');
+                
+                // 5秒后自动隐藏
+                setTimeout(() => {
+                    this.weatherTipElement.classList.remove('show');
+                }, 5000);
+            }
+            
+            checkWeatherChange() {
+                // 这里可以添加天气变化的检查逻辑
+                // 实际项目中应该比较新旧天气数据
+                console.log('检查天气变化...');
+            }
+        }
+        
+        // 语音输入功能
+        class VoiceInput {
+            constructor() {
+                this.searchInput = document.getElementById('searchInput');
+                this.microphoneBtn = document.getElementById('microphoneBtn');
+                this.voiceStatus = document.getElementById('voiceStatus');
+                this.voiceText = document.getElementById('voiceText');
+                
+                this.recognition = null;
+                this.isListening = false;
+                
+                this.init();
+            }
+            
+            init() {
+                if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+                    console.warn('您的浏览器不支持语音识别');
+                    this.microphoneBtn.style.opacity = '0.5';
+                    this.microphoneBtn.title = '浏览器不支持语音识别';
+                    this.microphoneBtn.style.cursor = 'not-allowed';
+                    return;
+                }
+                
+                this.initSpeechRecognition();
+                this.bindEvents();
+            }
+            
+            initSpeechRecognition() {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                this.recognition = new SpeechRecognition();
+                this.recognition.lang = 'zh-CN';
+                this.recognition.interimResults = false;
+                this.recognition.maxAlternatives = 1;
+                this.recognition.continuous = false;
+                
+                this.recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript.trim();
+                    this.handleVoiceResult(transcript);
+                };
+                
+                this.recognition.onerror = (event) => {
+                    console.error('语音识别错误:', event.error);
+                    this.stopListening();
+                    this.showVoiceStatus('识别失败，请重试', 'error');
+                };
+                
+                this.recognition.onstart = () => {
+                    this.isListening = true;
+                    this.microphoneBtn.classList.add('listening');
+                    this.showVoiceStatus('正在聆听...请说话', 'listening');
+                };
+                
+                this.recognition.onend = () => {
+                    this.stopListening();
+                };
+            }
+            
+            bindEvents() {
+                this.microphoneBtn.addEventListener('click', () => this.toggleListening());
+                this.searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.performSearch();
+                });
+            }
+            
+            toggleListening() {
+                if (this.microphoneBtn.style.cursor === 'not-allowed') {
+                    this.showVoiceStatus('浏览器不支持语音识别', 'error');
+                    return;
+                }
+                
+                if (this.isListening) {
+                    this.stopListening();
+                } else {
+                    this.startListening();
+                }
+            }
+            
+            startListening() {
+                try {
+                    this.recognition.start();
+                } catch (error) {
+                    console.error('语音识别启动失败:', error);
+                    this.showVoiceStatus('无法启动语音识别', 'error');
+                }
+            }
+            
+            stopListening() {
+                if (this.recognition && this.isListening) {
+                    this.recognition.stop();
+                }
+                this.isListening = false;
+                this.microphoneBtn.classList.remove('listening');
+                this.hideVoiceStatus();
+            }
+            
+            handleVoiceResult(transcript) {
+                this.searchInput.value = transcript;
+                this.showVoiceStatus(`识别结果: ${transcript}`, 'success');
+                setTimeout(() => this.performSearch(), 1000);
+            }
+            
+            performSearch() {
+                const searchTerm = this.searchInput.value.trim();
+                if (searchTerm) {
+                    this.showVoiceStatus(`搜索: ${searchTerm}`, 'search');
+                    setTimeout(() => {
+                        alert(`您搜索了: "${searchTerm}"\n\n搜索结果页面将在实际应用中显示。`);
+                        this.hideVoiceStatus();
+                    }, 1500);
+                }
+            }
+            
+            showVoiceStatus(message, type = 'info') {
+                this.voiceText.textContent = message;
+                this.voiceStatus.classList.add('show');
+                
+                switch(type) {
+                    case 'listening':
+                        this.voiceStatus.style.background = 'rgba(33, 150, 243, 0.9)';
+                        break;
+                    case 'success':
+                        this.voiceStatus.style.background = 'rgba(46, 213, 115, 0.9)';
+                        break;
+                    case 'error':
+                        this.voiceStatus.style.background = 'rgba(255, 71, 87, 0.9)';
+                        break;
+                    case 'search':
+                        this.voiceStatus.style.background = 'rgba(255, 168, 1, 0.9)';
+                        break;
+                    default:
+                        this.voiceStatus.style.background = 'rgba(0, 0, 0, 0.8)';
+                }
+            }
+            
+            hideVoiceStatus() {
+                this.voiceStatus.classList.remove('show');
+            }
+        }
+        
+        // 轮播图功能
+        class BannerSlider {
+            constructor(containerId) {
+                this.container = document.getElementById(containerId);
+                this.slider = this.container.querySelector('.banner-slider');
+                this.slides = Array.from(this.slider.children);
+                this.indicatorsContainer = this.container.querySelector('.banner-indicators');
+                this.prevBtn = this.container.querySelector('.prev');
+                this.nextBtn = this.container.querySelector('.next');
+                this.autoplayToggle = document.getElementById('autoplayToggle');
+                this.autoplayText = document.getElementById('autoplayControl').querySelector('span:last-child');
+                
+                this.currentIndex = 0;
+                this.totalSlides = this.slides.length;
+                this.isTransitioning = false;
+                this.autoplayEnabled = true;
+                this.autoplayInterval = 3000;
+                this.autoplayTimer = null;
+                
+                this.init();
+            }
+            
+            init() {
+                this.createIndicators();
+                this.bindEvents();
+                this.startAutoplay();
+                this.updateSlider();
+            }
+            
+            createIndicators() {
+                this.indicatorsContainer.innerHTML = '';
+                for (let i = 0; i < this.totalSlides; i++) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'indicator';
+                    if (i === 0) indicator.classList.add('active');
+                    indicator.dataset.index = i;
+                    indicator.addEventListener('click', () => this.goToSlide(i));
+                    this.indicatorsContainer.appendChild(indicator);
+                }
+            }
+            
+            bindEvents() {
+                this.prevBtn.addEventListener('click', () => this.prevSlide());
+                this.nextBtn.addEventListener('click', () => this.nextSlide());
+                this.autoplayToggle.addEventListener('click', () => this.toggleAutoplay());
+                
+                this.addTouchSupport();
+                this.container.addEventListener('mouseenter', () => this.pauseAutoplay());
+                this.container.addEventListener('mouseleave', () => this.resumeAutoplay());
+            }
+            
+            addTouchSupport() {
+                let startX = 0;
+                let endX = 0;
+                const threshold = 50;
+                
+                this.slider.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                }, { passive: true });
+                
+                this.slider.addEventListener('touchmove', (e) => {
+                    endX = e.touches[0].clientX;
+                }, { passive: true });
+                
+                this.slider.addEventListener('touchend', () => {
+                    const diff = startX - endX;
+                    if (Math.abs(diff) > threshold) {
+                        if (diff > 0) {
+                            this.nextSlide();
+                        } else {
+                            this.prevSlide();
+                        }
+                    }
+                });
+            }
+            
+            goToSlide(index) {
+                if (this.isTransitioning) return;
+                this.currentIndex = index;
+                this.updateSlider();
+                this.resetAutoplay();
+            }
+            
+            prevSlide() {
+                if (this.isTransitioning) return;
+                this.currentIndex = (this.currentIndex - 1 + this.totalSlides) % this.totalSlides;
+                this.updateSlider();
+                this.resetAutoplay();
+            }
+            
+            nextSlide() {
+                if (this.isTransitioning) return;
+                this.currentIndex = (this.currentIndex + 1) % this.totalSlides;
+                this.updateSlider();
+                this.resetAutoplay();
+            }
+            
+            updateSlider() {
+                this.isTransitioning = true;
+                this.slider.style.transform = `translateX(-${this.currentIndex * 100}%)`;
+                this.updateIndicators();
+                setTimeout(() => { this.isTransitioning = false; }, 500);
+            }
+            
+            updateIndicators() {
+                const indicators = this.indicatorsContainer.querySelectorAll('.indicator');
+                indicators.forEach((indicator, index) => {
+                    if (index === this.currentIndex) {
+                        indicator.classList.add('active');
+                    } else {
+                        indicator.classList.remove('active');
+                    }
+                });
+            }
+            
+            startAutoplay() {
+                if (this.autoplayEnabled) {
+                    this.autoplayTimer = setInterval(() => this.nextSlide(), this.autoplayInterval);
+                }
+            }
+            
+            pauseAutoplay() {
+                if (this.autoplayEnabled && this.autoplayTimer) {
+                    clearInterval(this.autoplayTimer);
+                }
+            }
+            
+            resumeAutoplay() {
+                if (this.autoplayEnabled) {
+                    this.startAutoplay();
+                }
+            }
+            
+            resetAutoplay() {
+                this.pauseAutoplay();
+                this.startAutoplay();
+            }
+            
+            toggleAutoplay() {
+                this.autoplayEnabled = !this.autoplayEnabled;
+                if (this.autoplayEnabled) {
+                    this.autoplayToggle.innerHTML = '<i class="fas fa-pause"></i>';
+                    this.autoplayText.textContent = '自动播放';
+                    this.startAutoplay();
+                } else {
+                    this.autoplayToggle.innerHTML = '<i class="fas fa-play"></i>';
+                    this.autoplayText.textContent = '暂停播放';
+                    this.pauseAutoplay();
+                }
+            }
+            
+            destroy() {
+                this.pauseAutoplay();
+                this.prevBtn.removeEventListener('click', () => this.prevSlide());
+                this.nextBtn.removeEventListener('click', () => this.nextSlide());
+                this.autoplayToggle.removeEventListener('click', () => this.toggleAutoplay());
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化实时天气
+            const weather = new RealTimeWeather();
+            
+            // 初始化语音输入
+            const voiceInput = new VoiceInput();
+            
+            // 初始化轮播图
+            const banner = new BannerSlider('bannerContainer');
+            
+            // 页面卸载时清理
+            window.addEventListener('beforeunload', () => {
+                if (voiceInput.recognition) {
+                    voiceInput.recognition.stop();
+                }
+                banner.destroy();
+            });
+        });
+    </script>
+</body>
+</html>

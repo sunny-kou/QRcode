@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 100vh;
+            font-size: 13px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 12px 2px;
+            background-color: #F7F3E7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 5px solid #C4734A;
+            color: #C4734A;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+
+        .title {
+            font-size: 16px;
+            font-weight: normal;
+            color: #C4734A;
+        }
+
+        .ticket-list {
+            padding: 8px;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            gap: 15px;
+            width: 357px;
+            margin: auto;
+            background-color: #F7F3E7;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 30px;
+        }
+        
+        .category {
+            width: 140px;
+            height: 190px;
+            background-color: #F3DFD2;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            /* padding: 8px;
+            gap: 8px; */
+            /* overflow: hidden; */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .text {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-left: 5px;
+        }
+
+        a
+        {
+            text-decoration: none;
+        }
+        
+        .big {
+            color: #000000;
+            font-weight: normal;
+            font-size: 20px;
+            line-height: 1.2;
+        }
+        
+        .small {
+            color: #000000;
+            font-size: 14px;
+            line-height: 1.2;
+            margin-right: 70px;
+        }
+
+        .ticket-title {
+            position: absolute;
+            bottom: 10px;
+            left: 15px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+        
+        .safe-area {
+            height: 20px;
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="特色文化.html"><img src="image/箭头.png" alt="" style="width: 25px;height: 25px;"></a>
+        <h1 class="title">非遗文化</h1>
+    </div>
+    <div class="ticket-list">
+        <div class="category">
+            <img src="imagecluture/非遗文化/IMG_5283 1.png" alt="jiudian" style="width: 140px;height: 190px;object-fit: cover;">
+            <div class="ticket-title">北京·京秀</div>
+        </div>
+        <div class="category">
+            <a href="北京景泰蓝.html">
+            <img src="imagecluture/非遗文化/IMG_5280 1.png" alt="jiudian" style="width: 140px;height: 190px;object-fit: cover;">
+            <div class="ticket-title">北京·景泰蓝</div>
+            </a>
+        </div>
+        <div class="category">
+            <img src="imagecluture/非遗文化/IMG_5282 1.png" alt="jiudian" style="width: 140px;height: 190px;object-fit: cover;">
+            <div class="ticket-title">天津·玉雕</div>
+        </div>
+        <div class="category">
+            <img src="imagecluture/非遗文化/IMG_5281 1.png" alt="jiudian" style="width: 140px;height: 190px;object-fit: cover;">
+            <div class="ticket-title">天津·泥塑</div>
+        </div>
+        <div class="category">
+            <img src="imagecluture/非遗文化/IMG_5279 1.png" alt="jiudian" style="width: 140px;height: 190px;object-fit: cover;">
+            <div class="ticket-title">河北·宫灯</div>
+        </div>
+        <div class="category">
+            <img src="imagecluture/非遗文化/IMG_5278 1.png" alt="jiudian" style="width: 140px;height: 190px;object-fit: cover;">
+            <div class="ticket-title">河北·皮影戏</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>门票预约</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 100vh;
+            font-size: 13px;
+        }
+        
+        
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 12px 2px;
+            background-color: #F7F3E7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 5px solid #C4734A;
+            color: #C4734A;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+
+        .title {
+            font-size: 16px;
+            font-weight: normal;
+            color: #C4734A;
+        }
+        
+        .ticket-list {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 357px;
+            margin: auto;
+            background-color: #F7F3E7;
+        }
+        
+        .ticket-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            height: 160px;
+        }
+        
+        .ticket-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .ticket-title {
+            position: absolute;
+            bottom: 10px;
+            left: 15px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        .white
+        {
+            position: absolute;
+            bottom: 35px;
+            width:100%;
+            height: 2px;
+            background-color: white;
+        }
+
+        .safe-area {
+            height: 20px;
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+   
+    <div class="header">
+        <a href="主页.html"><img src="image/箭头.png" alt="" style="width: 25px;height: 25px;"></a>
+        <h1 class="title">门票预约</h1>
+    </div>
+    
+   
+    <div class="ticket-list">
+      
+        <div class="ticket-card">
+            <a href="https://pcticket.chnmuseum.cn/#/" target="_blank">
+            <img src="bookimage/大会堂.png" alt="国家博物馆" class="ticket-image">
+            <div class="ticket-title">国家博物馆</div>
+            <div class="white"></div>
+            </a>
+        </div>
+        
+        <div class="ticket-card">
+            <a href="https://www.yuanmingyuanpark.cn/pw/mmp/202004/t20200430_4402176.html" target="_blank
+            ">
+            <img src="bookimage/圆明园.png" alt="圆明园" class="ticket-image">
+            <div class="ticket-title">圆明园</div>
+            <div class="white"></div>
+            </a>
+        </div>
+        
+     
+        <div class="ticket-card">
+            <a href="https://ticket.dpm.org.cn/" target="_blank">
+            <img src="bookimage/故宫.png" alt="故宫" class="ticket-image">
+            <div class="ticket-title">故宫</div>
+            <div class="white"></div>
+            </a>
+        </div>
+    
+        <div class="ticket-card">
+            <a href="https://tiantanpark.cn/guide_service.html#guide_service2_cont2" target="_blank">
+            <img src="bookimage/天坛.png" alt="天坛公园" class="ticket-image">
+            <div class="ticket-title">天坛公园</div>
+            <div class="white"></div>
+            </a>
+        </div>
+    </div>
+
+    <!-- 底部安全区域 -->
+    <div class="safe-area"></div>
+</body>
+</html>
